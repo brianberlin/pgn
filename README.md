@@ -1,4 +1,4 @@
-# PostgresPgnotify
+# PGN
 
 To start your Phoenix server:
 

@@ -1,6 +1,6 @@
-defmodule PostgresPgnotify do
+defmodule PGN do
   @moduledoc """
-  PostgresPgnotify keeps the contexts that define your domain
+  PGN keeps the contexts that define your domain
   and business logic.
 
   Contexts are also responsible for managing your data, regardless

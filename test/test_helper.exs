@@ -1,2 +1,2 @@
 ExUnit.start()
-Ecto.Adapters.SQL.Sandbox.mode(PostgresPgnotify.Repo, :manual)
+Ecto.Adapters.SQL.Sandbox.mode(PGN.Repo, :manual)

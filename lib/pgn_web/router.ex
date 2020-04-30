@@ -1,11 +1,12 @@
-defmodule PostgresPgnotifyWeb.Router do
-  use PostgresPgnotifyWeb, :router
+defmodule PGNWeb.Router do
+  use PGNWeb, :router
+  import Phoenix.LiveDashboard.Router
 
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
-    plug :put_root_layout, {PostgresPgnotifyWeb.LayoutView, :root}
+    plug :put_root_layout, {PGNWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
@@ -14,14 +15,21 @@ defmodule PostgresPgnotifyWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", PostgresPgnotifyWeb do
+  scope "/", PGNWeb do
     pipe_through :browser
 
-    live "/", PageLive, :index
+    live_dashboard "/dashboard"
+
+    live "/", NotificationLive.Index, :index
+    live "/new", NotificationLive.Index, :new
+    live "/:id/edit", NotificationLive.Index, :edit
+
+    live "/:id", NotificationLive.Show, :show
+    live "/:id/show/edit", NotificationLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", PostgresPgnotifyWeb do
+  # scope "/api", PGNWeb do
   #   pipe_through :api
   # end
 
@@ -37,7 +45,7 @@ defmodule PostgresPgnotifyWeb.Router do
 
     scope "/" do
       pipe_through :browser
-      live_dashboard "/dashboard", metrics: PostgresPgnotifyWeb.Telemetry
+      live_dashboard "/dashboard", metrics: PGNWeb.Telemetry
     end
   end
 end

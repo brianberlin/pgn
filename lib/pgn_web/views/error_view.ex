@@ -1,5 +1,5 @@
-defmodule PostgresPgnotifyWeb.ErrorView do
-  use PostgresPgnotifyWeb, :view
+defmodule PGNWeb.ErrorView do
+  use PGNWeb, :view
 
   # If you want to customize a particular status code
   # for a certain format, you may uncomment below.

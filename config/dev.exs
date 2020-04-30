@@ -1,7 +1,7 @@
 use Mix.Config
 
 # Configure your database
-config :postgres_pgnotify, PostgresPgnotify.Repo,
+config :postgres_pgnotify, PGN.Repo,
   username: "postgres",
   password: "postgres",
   database: "postgres_pgnotify_dev",
@@ -15,7 +15,7 @@ config :postgres_pgnotify, PostgresPgnotify.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
-config :postgres_pgnotify, PostgresPgnotifyWeb.Endpoint,
+config :postgres_pgnotify, PGNWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
@@ -55,7 +55,7 @@ config :postgres_pgnotify, PostgresPgnotifyWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :postgres_pgnotify, PostgresPgnotifyWeb.Endpoint,
+config :postgres_pgnotify, PGNWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",

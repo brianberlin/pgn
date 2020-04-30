@@ -1,5 +1,5 @@
-defmodule PostgresPgnotifyWeb.PageLiveTest do
-  use PostgresPgnotifyWeb.ConnCase
+defmodule PGNWeb.PageLiveTest do
+  use PGNWeb.ConnCase
 
   import Phoenix.LiveViewTest
 

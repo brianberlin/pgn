@@ -1,0 +1,35 @@
+<h1><%= @title %></h1>
+
+<%= f = form_for @changeset, "#",
+  id: "notification-form",
+  phx_target: @myself,
+  phx_change: "validate",
+  phx_submit: "save" %>
+
+  <%= label f, :on_insert %>
+  <%= checkbox f, :on_insert %>
+  <%= error_tag f, :on_insert %>
+
+  <%= label f, :on_update %>
+  <%= checkbox f, :on_update %>
+  <%= error_tag f, :on_update %>
+
+  <%= label f, :on_delete %>
+  <%= checkbox f, :on_delete %>
+  <%= error_tag f, :on_delete %>
+
+  <%= label f, :table %>
+  <%= select f, :table, @tables %>
+  <%= error_tag f, :table %>
+
+  <%= label f, :fields %>
+  <input type="hidden" name="notification[fields][]" />
+  <%= for {field, selected} <- @fields do %>
+    <%= field %>
+    <input name="notification[fields][]" type="checkbox" value="<%= field %>" <%= if selected, do: "checked" %> />
+    <br />
+  <% end %>
+  <%= error_tag f, :fields %>
+
+  <%= submit "Save", phx_disable_with: "Saving..." %>
+</form>

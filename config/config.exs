@@ -8,14 +8,14 @@
 use Mix.Config
 
 config :postgres_pgnotify,
-  ecto_repos: [PostgresPgnotify.Repo]
+  ecto_repos: [PGN.Repo]
 
 # Configures the endpoint
-config :postgres_pgnotify, PostgresPgnotifyWeb.Endpoint,
+config :postgres_pgnotify, PGNWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "Cr6x6ztICQQxtVKWzTDyY4l2AR+ZQlseEOdOZsl/9ZfkVDhlsth7nQ/4vLj/ZFmj",
-  render_errors: [view: PostgresPgnotifyWeb.ErrorView, accepts: ~w(html json), layout: false],
-  pubsub_server: PostgresPgnotify.PubSub,
+  render_errors: [view: PGNWeb.ErrorView, accepts: ~w(html json), layout: false],
+  pubsub_server: PGN.PubSub,
   live_view: [signing_salt: "yJZ0KRDp"]
 
 # Configures Elixir's Logger

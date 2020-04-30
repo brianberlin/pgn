@@ -1,12 +1,12 @@
-defmodule PostgresPgnotifyWeb do
+defmodule PGNWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, views, channels and so on.
 
   This can be used in your application as:
 
-      use PostgresPgnotifyWeb, :controller
-      use PostgresPgnotifyWeb, :view
+      use PGNWeb, :controller
+      use PGNWeb, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -19,11 +19,11 @@ defmodule PostgresPgnotifyWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: PostgresPgnotifyWeb
+      use Phoenix.Controller, namespace: PGNWeb
 
       import Plug.Conn
-      import PostgresPgnotifyWeb.Gettext
-      alias PostgresPgnotifyWeb.Router.Helpers, as: Routes
+      import PGNWeb.Gettext
+      alias PGNWeb.Router.Helpers, as: Routes
     end
   end
 
@@ -31,7 +31,7 @@ defmodule PostgresPgnotifyWeb do
     quote do
       use Phoenix.View,
         root: "lib/postgres_pgnotify_web/templates",
-        namespace: PostgresPgnotifyWeb
+        namespace: PGNWeb
 
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_flash: 1, get_flash: 2, view_module: 1]
@@ -44,7 +44,7 @@ defmodule PostgresPgnotifyWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {PostgresPgnotifyWeb.LayoutView, "live.html"}
+        layout: {PGNWeb.LayoutView, "live.html"}
 
       unquote(view_helpers())
     end
@@ -71,7 +71,7 @@ defmodule PostgresPgnotifyWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import PostgresPgnotifyWeb.Gettext
+      import PGNWeb.Gettext
     end
   end
 
@@ -82,13 +82,14 @@ defmodule PostgresPgnotifyWeb do
 
       # Import LiveView helpers (live_render, live_component, live_patch, etc)
       import Phoenix.LiveView.Helpers
+      import PGNWeb.LiveHelpers
 
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
-      import PostgresPgnotifyWeb.ErrorHelpers
-      import PostgresPgnotifyWeb.Gettext
-      alias PostgresPgnotifyWeb.Router.Helpers, as: Routes
+      import PGNWeb.ErrorHelpers
+      import PGNWeb.Gettext
+      alias PGNWeb.Router.Helpers, as: Routes
     end
   end
 

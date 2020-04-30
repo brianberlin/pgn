@@ -1,0 +1,42 @@
+<h1>Show Notification</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal @socket, PGNWeb.NotificationLive.FormComponent,
+    id: @notification.id,
+    title: @page_title,
+    action: @live_action,
+    notification: @notification,
+    return_to: Routes.notification_show_path(@socket, :show, @notification) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>On insert:</strong>
+    <%= @notification.on_insert %>
+  </li>
+
+  <li>
+    <strong>On update:</strong>
+    <%= @notification.on_update %>
+  </li>
+
+  <li>
+    <strong>On delete:</strong>
+    <%= @notification.on_delete %>
+  </li>
+
+  <li>
+    <strong>Table:</strong>
+    <%= @notification.table %>
+  </li>
+
+  <li>
+    <strong>Fields:</strong>
+    <%= Enum.join(@notification.fields, ", ") %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.notification_show_path(@socket, :edit, @notification), class: "button" %></span>
+<span><%= live_redirect "Back", to: Routes.notification_index_path(@socket, :index) %></span>

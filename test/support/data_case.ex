@@ -1,4 +1,4 @@
-defmodule PostgresPgnotify.DataCase do
+defmodule PGN.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -10,7 +10,7 @@ defmodule PostgresPgnotify.DataCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use PostgresPgnotify.DataCase, async: true`, although
+  by setting `use PGN.DataCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -18,20 +18,20 @@ defmodule PostgresPgnotify.DataCase do
 
   using do
     quote do
-      alias PostgresPgnotify.Repo
+      alias PGN.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import PostgresPgnotify.DataCase
+      import PGN.DataCase
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(PostgresPgnotify.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(PGN.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(PostgresPgnotify.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(PGN.Repo, {:shared, self()})
     end
 
     :ok

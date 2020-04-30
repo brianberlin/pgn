@@ -1,4 +1,4 @@
-defmodule PostgresPgnotifyWeb.ChannelCase do
+defmodule PGNWeb.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -11,7 +11,7 @@ defmodule PostgresPgnotifyWeb.ChannelCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use PostgresPgnotifyWeb.ChannelCase, async: true`, although
+  by setting `use PGNWeb.ChannelCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -21,18 +21,18 @@ defmodule PostgresPgnotifyWeb.ChannelCase do
     quote do
       # Import conveniences for testing with channels
       import Phoenix.ChannelTest
-      import PostgresPgnotifyWeb.ChannelCase
+      import PGNWeb.ChannelCase
 
       # The default endpoint for testing
-      @endpoint PostgresPgnotifyWeb.Endpoint
+      @endpoint PGNWeb.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(PostgresPgnotify.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(PGN.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(PostgresPgnotify.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(PGN.Repo, {:shared, self()})
     end
 
     :ok

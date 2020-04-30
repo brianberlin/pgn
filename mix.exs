@@ -1,4 +1,4 @@
-defmodule PostgresPgnotify.MixProject do
+defmodule PGN.MixProject do
   use Mix.Project
 
   def project do
@@ -19,7 +19,7 @@ defmodule PostgresPgnotify.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {PostgresPgnotify.Application, []},
+      mod: {PGN.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

@@ -1,5 +1,5 @@
-defmodule PostgresPgnotifyWeb.PageLive do
-  use PostgresPgnotifyWeb, :live_view
+defmodule PGNWeb.PageLive do
+  use PGNWeb, :live_view
 
   @impl true
   def mount(_params, _session, socket) do
@@ -26,7 +26,7 @@ defmodule PostgresPgnotifyWeb.PageLive do
   end
 
   defp search(query) do
-    if not PostgresPgnotifyWeb.Endpoint.config(:code_reloader) do
+    if not PGNWeb.Endpoint.config(:code_reloader) do
       raise "action disabled when not in development"
     end
 

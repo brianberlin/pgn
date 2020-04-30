@@ -1,4 +1,4 @@
-defmodule PostgresPgnotify.Application do
+defmodule PGN.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -8,27 +8,27 @@ defmodule PostgresPgnotify.Application do
   def start(_type, _args) do
     children = [
       # Start the Ecto repository
-      PostgresPgnotify.Repo,
+      PGN.Repo,
       # Start the Telemetry supervisor
-      PostgresPgnotifyWeb.Telemetry,
+      PGNWeb.Telemetry,
       # Start the PubSub system
-      {Phoenix.PubSub, name: PostgresPgnotify.PubSub},
+      {Phoenix.PubSub, name: PGN.PubSub},
       # Start the Endpoint (http/https)
-      PostgresPgnotifyWeb.Endpoint
-      # Start a worker by calling: PostgresPgnotify.Worker.start_link(arg)
-      # {PostgresPgnotify.Worker, arg}
+      PGNWeb.Endpoint
+      # Start a worker by calling: PGN.Worker.start_link(arg)
+      # {PGN.Worker, arg}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: PostgresPgnotify.Supervisor]
+    opts = [strategy: :one_for_one, name: PGN.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
   def config_change(changed, _new, removed) do
-    PostgresPgnotifyWeb.Endpoint.config_change(changed, removed)
+    PGNWeb.Endpoint.config_change(changed, removed)
     :ok
   end
 end

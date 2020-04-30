@@ -1,4 +1,4 @@
-defmodule PostgresPgnotifyWeb.Endpoint do
+defmodule PGNWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :postgres_pgnotify
 
   # The session will be stored in the cookie and signed,
@@ -10,7 +10,7 @@ defmodule PostgresPgnotifyWeb.Endpoint do
     signing_salt: "A7NluH/U"
   ]
 
-  socket "/socket", PostgresPgnotifyWeb.UserSocket,
+  socket "/socket", PGNWeb.UserSocket,
     websocket: true,
     longpoll: false
 
@@ -50,5 +50,5 @@ defmodule PostgresPgnotifyWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-  plug PostgresPgnotifyWeb.Router
+  plug PGNWeb.Router
 end
