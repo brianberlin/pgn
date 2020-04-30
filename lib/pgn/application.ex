@@ -6,15 +6,18 @@ defmodule PGN.Application do
   use Application
 
   def start(_type, _args) do
+    import Supervisor.Spec
+
     children = [
       # Start the Ecto repository
       PGN.Repo,
+      supervisor(PGNWeb.DataServerSupervisor, []),
       # Start the Telemetry supervisor
       PGNWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: PGN.PubSub},
       # Start the Endpoint (http/https)
-      PGNWeb.Endpoint
+      PGNWeb.Endpoint,
       # Start a worker by calling: PGN.Worker.start_link(arg)
       # {PGN.Worker, arg}
     ]

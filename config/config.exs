@@ -7,11 +7,11 @@
 # General application configuration
 use Mix.Config
 
-config :postgres_pgnotify,
+config :pgn,
   ecto_repos: [PGN.Repo]
 
 # Configures the endpoint
-config :postgres_pgnotify, PGNWeb.Endpoint,
+config :pgn, PGNWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "Cr6x6ztICQQxtVKWzTDyY4l2AR+ZQlseEOdOZsl/9ZfkVDhlsth7nQ/4vLj/ZFmj",
   render_errors: [view: PGNWeb.ErrorView, accepts: ~w(html json), layout: false],

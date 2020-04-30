@@ -3,7 +3,7 @@ defmodule PGN.MixProject do
 
   def project do
     [
-      app: :postgres_pgnotify,
+      app: :pgn,
       version: "0.1.0",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),

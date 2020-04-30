@@ -29,11 +29,11 @@ defmodule PGNWeb.Telemetry do
       ),
 
       # Database Metrics
-      summary("postgres_pgnotify.repo.query.total_time", unit: {:native, :millisecond}),
-      summary("postgres_pgnotify.repo.query.decode_time", unit: {:native, :millisecond}),
-      summary("postgres_pgnotify.repo.query.query_time", unit: {:native, :millisecond}),
-      summary("postgres_pgnotify.repo.query.queue_time", unit: {:native, :millisecond}),
-      summary("postgres_pgnotify.repo.query.idle_time", unit: {:native, :millisecond}),
+      summary("pgn.repo.query.total_time", unit: {:native, :millisecond}),
+      summary("pgn.repo.query.decode_time", unit: {:native, :millisecond}),
+      summary("pgn.repo.query.query_time", unit: {:native, :millisecond}),
+      summary("pgn.repo.query.queue_time", unit: {:native, :millisecond}),
+      summary("pgn.repo.query.idle_time", unit: {:native, :millisecond}),
 
       # VM Metrics
       summary("vm.memory.total", unit: {:byte, :kilobyte}),

@@ -30,7 +30,7 @@ defmodule PGNWeb do
   def view do
     quote do
       use Phoenix.View,
-        root: "lib/postgres_pgnotify_web/templates",
+        root: "lib/pgn_web/templates",
         namespace: PGNWeb
 
       # Import convenience functions from controllers

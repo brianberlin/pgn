@@ -20,7 +20,7 @@ erl_crash.dump
 *.ez
 
 # Ignore package tarball (built via "mix hex.build").
-postgres_pgnotify-*.tar
+pgn-*.tar
 
 # If NPM crashes, it generates a log, let's ignore it too.
 npm-debug.log

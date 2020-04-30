@@ -1,12 +1,15 @@
 defmodule PGNWeb.NotificationLive.Index do
   use PGNWeb, :live_view
 
-  alias PGN.{Repo, Notifications, Notifications.Notification}
+  alias PGN.{Notifications, Notifications.Notification}
+  alias PGNWeb.{DataServerSupervisor, NotificationLive.DataServer}
 
   @impl true
   def mount(_params, _session, socket) do
     socket
+    |> connect_to_data_server()
     |> assign_notifications()
+    |> assign_notification_log()
     |> ok()
   end
 
@@ -28,13 +31,11 @@ defmodule PGNWeb.NotificationLive.Index do
   end
 
   @impl true
-  def handle_info({:notification, _pid, _ref, name, payload}, socket) do
-    IO.inspect({name, payload})
-
+  def handle_info({PGNWeb.NotificationLive.DataServer, data}, socket) do
     socket
+    |> assign_notification_log(data)
     |> noreply()
   end
-
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
@@ -54,12 +55,23 @@ defmodule PGNWeb.NotificationLive.Index do
     |> assign(:notification, nil)
   end
 
+  defp assign_notification_log(socket) do
+    assign(socket, :notification_log, [])
+  end
+
+  defp assign_notification_log(%{assigns: %{notification_log: notification_log}} = socket, data) do
+    assign(socket, :notification_log, ["#{inspect(data)}"] ++ notification_log)
+  end
+
   defp assign_notifications(socket) do
-    {:ok, listener} = Repo.start_notification_listener()
     notifications = Notifications.list_notifications()
-    Enum.each(notifications, fn notification ->
-      {:ok, _ref} = Repo.listen(listener, Notifications.function_name(notification.id))
-    end)
     assign(socket, :notifications, notifications)
+  end
+
+  defp connect_to_data_server(socket) do
+    if connected?(socket) do
+      DataServerSupervisor.subscribe(DataServer, [])
+    end
+    socket
   end
 end

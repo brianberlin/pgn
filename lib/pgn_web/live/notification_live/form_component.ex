@@ -71,12 +71,12 @@ defmodule PGNWeb.NotificationLive.FormComponent do
     assign_field_options(socket, table, fields)
   end
 
-  defp assign_field_options(socket, %{"table" => table, "fields" => fields}) do
-    assign_field_options(socket, table, fields)
-  end
-
   defp assign_field_options(%{assigns: %{notification: %{table: table}}} = socket) do
     assign_field_options(socket, table, [])
+  end
+
+  defp assign_field_options(socket, %{"table" => table, "fields" => fields}) do
+    assign_field_options(socket, table, fields)
   end
 
   defp assign_field_options(socket, table, fields) do

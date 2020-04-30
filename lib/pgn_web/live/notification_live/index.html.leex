@@ -9,6 +9,10 @@
     return_to: Routes.notification_index_path(@socket, :index) %>
 <% end %>
 
+<textarea>
+  <%= Enum.join(@notification_log, "\n") %>
+</textarea>
+
 <table>
   <thead>
     <tr>
@@ -16,6 +20,7 @@
       <th>On update</th>
       <th>On delete</th>
       <th>Table</th>
+      <th>Fields</th>
 
       <th></th>
     </tr>
@@ -27,6 +32,7 @@
         <td><%= notification.on_update %></td>
         <td><%= notification.on_delete %></td>
         <td><%= notification.table %></td>
+        <td><%= Enum.join(notification.fields, ", ") %></td>
 
         <td>
           <span><%= live_redirect "Show", to: Routes.notification_show_path(@socket, :show, notification) %></span>

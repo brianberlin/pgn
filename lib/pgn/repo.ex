@@ -1,6 +1,6 @@
 defmodule PGN.Repo do
   use Ecto.Repo,
-    otp_app: :postgres_pgnotify,
+    otp_app: :pgn,
     adapter: Ecto.Adapters.Postgres
 
   @doc """

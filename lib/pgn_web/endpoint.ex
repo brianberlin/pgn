@@ -1,12 +1,12 @@
 defmodule PGNWeb.Endpoint do
-  use Phoenix.Endpoint, otp_app: :postgres_pgnotify
+  use Phoenix.Endpoint, otp_app: :pgn
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
   @session_options [
     store: :cookie,
-    key: "_postgres_pgnotify_key",
+    key: "_pgn_key",
     signing_salt: "A7NluH/U"
   ]
 
@@ -22,7 +22,7 @@ defmodule PGNWeb.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/",
-    from: :postgres_pgnotify,
+    from: :pgn,
     gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt)
 
@@ -32,7 +32,7 @@ defmodule PGNWeb.Endpoint do
     socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
-    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :postgres_pgnotify
+    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :pgn
   end
 
   plug Phoenix.LiveDashboard.RequestLogger,
