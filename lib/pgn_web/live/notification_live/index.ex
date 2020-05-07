@@ -1,16 +1,24 @@
 defmodule PGNWeb.NotificationLive.Index do
   use PGNWeb, :live_view
 
-  alias PGN.{Notifications, Notifications.Notification}
-  alias PGNWeb.{DataServerSupervisor, NotificationLive.DataServer}
+  alias PGN.{Notifications, Notification}
+  alias PGN.{Repo}
 
   @impl true
   def mount(_params, _session, socket) do
+    PGN.Notifications.Listener.start_link([])
+
     socket
-    |> connect_to_data_server()
     |> assign_notifications()
     |> assign_notification_log()
     |> ok()
+  end
+
+  @impl true
+  def handle_info({:notification, channel, payload}, socket) do
+    socket
+    |> assign_notification_log(payload)
+    |> noreply()
   end
 
   @impl true
@@ -22,7 +30,7 @@ defmodule PGNWeb.NotificationLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    notification = Notifications.get_notification!(id)
+    notification = Notifications.get_notification(id)
     {:ok, _} = Notifications.delete_notification(notification)
 
     socket
@@ -30,17 +38,10 @@ defmodule PGNWeb.NotificationLive.Index do
     |> noreply()
   end
 
-  @impl true
-  def handle_info({PGNWeb.NotificationLive.DataServer, data}, socket) do
-    socket
-    |> assign_notification_log(data)
-    |> noreply()
-  end
-
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Notification")
-    |> assign(:notification, Notifications.get_notification!(id))
+    |> assign(:notification, Notifications.get_notification(id))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -60,18 +61,11 @@ defmodule PGNWeb.NotificationLive.Index do
   end
 
   defp assign_notification_log(%{assigns: %{notification_log: notification_log}} = socket, data) do
-    assign(socket, :notification_log, ["#{inspect(data)}"] ++ notification_log)
+    assign(socket, :notification_log, [data] ++ notification_log)
   end
 
   defp assign_notifications(socket) do
     notifications = Notifications.list_notifications()
     assign(socket, :notifications, notifications)
-  end
-
-  defp connect_to_data_server(socket) do
-    if connected?(socket) do
-      DataServerSupervisor.subscribe(DataServer, [])
-    end
-    socket
   end
 end

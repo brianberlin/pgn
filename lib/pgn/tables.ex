@@ -1,6 +1,8 @@
 defmodule PGN.Tables do
   def get_table_options do
-    query("SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema'")
+    query(
+      "SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema'"
+    )
   end
 
   def get_field_options(nil), do: []

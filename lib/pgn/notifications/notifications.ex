@@ -3,42 +3,75 @@ defmodule PGN.Notifications do
   The Dashboard context.
   """
 
-  import Ecto.Query, warn: false
-  alias PGN.Repo
+  alias PGN.{Helpers, Notification}
+  import PGN.Helpers
 
-  alias PGN.Notifications.Notification
-
-  @doc """
-  Returns the list of notifications.
-
-  ## Examples
-
-      iex> list_notifications()
-      [%Notification{}, ...]
-
+  @base_trigger_sql """
+  SELECT
+    trigger_name as name,
+    string_agg(event_manipulation, ', ') as operations,
+    event_object_table as table
+  FROM
+    information_schema.triggers
   """
+
+  @list_triggers """
+  #{@base_trigger_sql}
+  WHERE
+    trigger_name LIKE 'app_trigger_%'
+  GROUP BY
+    trigger_name, event_object_table
+  """
+
+  @get_trigger """
+  #{@base_trigger_sql}
+  WHERE
+    trigger_name = $1
+  GROUP BY
+    trigger_name, event_object_table
+  """
+
+  @get_function "SELECT prosrc FROM pg_proc WHERE proname = $1"
+
   def list_notifications do
-    Repo.all(Notification)
+    @list_triggers
+    |> query()
+    |> Enum.map(&to_notification/1)
+  end
+
+  def get_notification(id) do
+    @get_trigger
+    |> query(["app_trigger_" <> id])
+    |> List.first()
+    |> to_notification()
+  end
+
+  defp to_notification(%{name: "app_trigger_" <> id, table: table, operations: operations} = trigger) do
+    %Notification{
+      id: id,
+      table: table,
+      on_insert: String.contains?(operations, "INSERT"),
+      on_update: String.contains?(operations, "UPDATE"),
+      on_delete: String.contains?(operations, "DELETE"),
+      fields: get_fields(id)
+    }
+  end
+
+  defp get_fields(id) do
+    @get_function
+    |> query(["app_function_#{id}"])
+    |> List.first()
+    |> parse_fields()
+  end
+
+  defp parse_fields(%{prosrc: prosrc}) do
+    ~r/NEW\.([a-zA-Z_]+),/
+    |> Regex.scan(prosrc)
+    |> Enum.map(&Enum.at(&1, 1))
   end
 
   @doc """
-  Gets a single notification.
-
-  Raises `Ecto.NoResultsError` if the Notification does not exist.
-
-  ## Examples
-
-      iex> get_notification!(123)
-      %Notification{}
-
-      iex> get_notification!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_notification!(id), do: Repo.get!(Notification, id)
-
-  @doc """
-  Creates a notification.
+  Creates a trigger.
 
   ## Examples
 
@@ -52,7 +85,7 @@ defmodule PGN.Notifications do
   def create_notification(attrs \\ %{}) do
     %Notification{}
     |> Notification.changeset(attrs)
-    |> Repo.insert()
+    |> Ecto.Changeset.apply_changes()
     |> insert_function()
     |> insert_trigger()
   end
@@ -72,7 +105,6 @@ defmodule PGN.Notifications do
   def update_notification(%Notification{} = notification, attrs) do
     notification
     |> Notification.changeset(attrs)
-    |> Repo.update()
     |> insert_function()
   end
 
@@ -88,10 +120,10 @@ defmodule PGN.Notifications do
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_notification(%Notification{} = notification) do
-    notification
-    |> Repo.delete()
-    |> delete_trigger()
+  def delete_notification(%Notification{id: id, table: table} = notification) do
+    query = "DROP FUNCTION #{function_name(id)} CASCADE"
+    PGN.Repo.query!(query)
+    {:ok, notification}
   end
 
   @doc """
@@ -107,7 +139,6 @@ defmodule PGN.Notifications do
     Notification.changeset(notification, attrs)
   end
 
-
   defp trigger_name(id), do: "app_trigger_#{id}"
   defp function_name(id), do: "app_function_#{id}"
 
@@ -119,16 +150,22 @@ defmodule PGN.Notifications do
       |> Enum.join(" OR ")
   end
 
-  defp function_fields(table, fields) do
-    fields =
+
+  defp function_fields(fields) do
+    new_data =
       fields
       |> Enum.map(&"'#{&1}', NEW.#{&1}")
       |> Enum.join(",")
 
-    "'db_table', '#{table}', 'payload', json_build_object(#{fields})"
+    old_data =
+      fields
+      |> Enum.map(&"'#{&1}', OLD.#{&1}")
+      |> Enum.join(",")
+
+    "'table', TG_TABLE_NAME, 'op', TG_OP, 'new_data', json_build_object(#{new_data}), 'old_data', json_build_object(#{old_data})"
   end
 
-  defp insert_function({:ok, %Notification{id: id, table: table, fields: fields} = notification}) do
+  defp insert_function(%Notification{id: id, table: table, fields: fields} = notification) do
     query =
       """
         CREATE OR REPLACE FUNCTION #{function_name(id)}()
@@ -136,7 +173,7 @@ defmodule PGN.Notifications do
         BEGIN
           PERFORM pg_notify(
             'notification',
-            json_build_object(#{function_fields(table, fields)})::text
+            json_build_object(#{function_fields(fields)})::text
           );
         RETURN NEW;
         END;
@@ -144,7 +181,6 @@ defmodule PGN.Notifications do
       """
 
     PGN.Repo.query!(query)
-    |> IO.inspect()
 
     {:ok, notification}
   end
@@ -160,19 +196,8 @@ defmodule PGN.Notifications do
       """
 
     PGN.Repo.query!(query)
-    |> IO.inspect()
 
     {:ok, notification}
   end
 
-  defp delete_trigger({:ok, %Notification{id: id, table: table} = notification}) do
-    query =
-      """
-        DROP TRIGGER IF EXISTS #{trigger_name(id)}
-        ON #{table} CASCADE
-      """
-    PGN.Repo.query!(query)
-    {:ok, notification}
-
-  end
 end

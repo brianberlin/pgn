@@ -10,10 +10,6 @@ defmodule PGNWeb.Endpoint do
     signing_salt: "A7NluH/U"
   ]
 
-  socket "/socket", PGNWeb.UserSocket,
-    websocket: true,
-    longpoll: false
-
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
 
   # Serve at "/" the static files from "priv/static" directory.

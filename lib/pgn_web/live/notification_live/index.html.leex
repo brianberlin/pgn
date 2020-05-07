@@ -9,10 +9,6 @@
     return_to: Routes.notification_index_path(@socket, :index) %>
 <% end %>
 
-<textarea>
-  <%= Enum.join(@notification_log, "\n") %>
-</textarea>
-
 <table>
   <thead>
     <tr>
@@ -45,3 +41,11 @@
 </table>
 
 <span><%= live_patch "New Notification", to: Routes.notification_index_path(@socket, :new) %></span>
+
+<hr>
+
+<h2>Notification Log</h2>
+
+<%= for log <- @notification_log do %>
+  <code><pre><%= Jason.encode!(log, pretty: true) %></pre></code>
+<% end %>

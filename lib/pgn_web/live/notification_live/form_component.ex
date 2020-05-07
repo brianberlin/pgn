@@ -29,10 +29,10 @@ defmodule PGNWeb.NotificationLive.FormComponent do
   defp save_notification(socket, :edit, notification_params) do
     case Notifications.update_notification(socket.assigns.notification, notification_params) do
       {:ok, _notification} ->
-         socket
-         |> put_flash(:info, "Notification updated successfully")
-         |> push_redirect(to: socket.assigns.return_to)
-         |> noreply()
+        socket
+        |> put_flash(:info, "Notification updated successfully")
+        |> push_redirect(to: socket.assigns.return_to)
+        |> noreply()
 
       {:error, %Ecto.Changeset{} = changeset} ->
         socket
@@ -44,10 +44,10 @@ defmodule PGNWeb.NotificationLive.FormComponent do
   defp save_notification(socket, :new, notification_params) do
     case Notifications.create_notification(notification_params) do
       {:ok, _notification} ->
-         socket
-         |> put_flash(:info, "Notification created successfully")
-         |> push_redirect(to: socket.assigns.return_to)
-         |> noreply()
+        socket
+        |> put_flash(:info, "Notification created successfully")
+        |> push_redirect(to: socket.assigns.return_to)
+        |> noreply()
 
       {:error, %Ecto.Changeset{} = changeset} ->
         socket

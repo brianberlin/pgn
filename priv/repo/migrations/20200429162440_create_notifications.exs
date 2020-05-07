@@ -11,6 +11,5 @@ defmodule PGN.Repo.Migrations.CreateNotifications do
 
       timestamps()
     end
-
   end
 end

@@ -10,10 +10,10 @@ defmodule PGNWeb.NotificationLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
-     socket
-     |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:notification, Notifications.get_notification!(id))
-     |> noreply()
+    socket
+    |> assign(:page_title, page_title(socket.assigns.live_action))
+    |> assign(:notification, Notifications.get_notification(id))
+    |> noreply()
   end
 
   defp page_title(:show), do: "Show Notification"
